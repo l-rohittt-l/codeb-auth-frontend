@@ -1,7 +1,11 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const API_BASE_URL = 'https://codeb-ims.onrender.com/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const registerUser = async (formData) => {
-  return await axios.post(`${API_BASE_URL}/register`, formData)
-}
+export const registerUser = async (data) => {
+  return axios.post(`${API_BASE_URL}/api/register`, data);
+};
+
+export const loginUser = async (data) => {
+  return axios.post(`${API_BASE_URL}/api/login`, data);
+};
