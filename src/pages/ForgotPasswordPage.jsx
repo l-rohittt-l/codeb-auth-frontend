@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { toast } from 'react-toastify';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // 🆕 loading state
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,29 +14,32 @@ const ForgotPasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
 
     if (!email) {
-      setMessage('Email is required.');
+      toast.error('Email is required.');
       return;
     }
 
     if (!validateEmail(email)) {
-      setMessage('Please enter a valid email address.');
+      toast.error('Please enter a valid email address.');
       return;
     }
 
+    setLoading(true); // 🟡 Start loading
+
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/forgot-password`, { email });
-      setMessage('Reset password link sent to your email.');
+      toast.success('Reset password link sent to your email.');
     } catch (error) {
       console.error('Error sending reset link:', error.response?.data || error.message);
 
       if (error.response?.status === 404) {
-        setMessage('Email not found.');
+        toast.error('Email not found.');
       } else {
-        setMessage('Error sending reset link. Try again later.');
+        toast.error('Error sending reset link. Try again later.');
       }
+    } finally {
+      setLoading(false); // 🔵 Stop loading
     }
   };
 
@@ -54,14 +58,10 @@ const ForgotPasswordPage = () => {
               required
             />
           </div>
-          <button type="submit" style={{ marginTop: '15px' }}>Send Reset Link</button>
+          <button type="submit" style={{ marginTop: '15px' }} disabled={loading}>
+            {loading ? 'Please wait...' : 'Send Reset Link'}
+          </button>
         </form>
-
-        {message && (
-          <p style={{ marginTop: '15px', color: message.includes('sent') ? 'green' : 'crimson' }}>
-            {message}
-          </p>
-        )}
       </div>
     </>
   );

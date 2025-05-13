@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { toast } from 'react-toastify';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,8 +16,7 @@ const RegisterPage = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false); // 🆕 loading state
 
   const handleChange = (e) => {
     setFormData({
@@ -38,66 +38,63 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMsg('');
-    setErrorMsg('');
 
-    // Basic field checks
     if (!formData.full_name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setErrorMsg("All fields are required.");
+      toast.error("All fields are required.");
       return;
     }
 
-    // Email format check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setErrorMsg("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
       return;
     }
 
-    // Password validation
     const passwordError = validatePassword(formData.password);
     if (passwordError) {
-      setErrorMsg(passwordError);
+      toast.error(passwordError);
       return;
     }
 
-    // Confirm password check
     if (formData.password !== formData.confirmPassword) {
-      setErrorMsg("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
+
+    setLoading(true); // 🟡 Start loading
 
     try {
       const { confirmPassword, ...requestData } = formData;
 
       const response = await axios.post(`${API_BASE_URL}/api/register`, requestData);
-      setSuccessMsg('Registration successful');
+      toast.success('Registration successful');
       console.log('Register success:', response.data);
 
       setTimeout(() => {
         window.location.href = '/login';
       }, 1500);
-
     } catch (error) {
       console.error('Register failed:', error.response?.data || error.message);
 
       const res = error.response;
 
       if (!res) {
-        setErrorMsg('Network error or server not reachable.');
+        toast.error('Network error or server not reachable.');
       } else if (res.status === 401) {
-        setErrorMsg('Invalid input or password does not meet requirements.');
+        toast.error('Invalid input or password does not meet requirements.');
       } else if (res.status === 400) {
         if (res.data?.errors?.length) {
-          setErrorMsg(res.data.errors[0].defaultMessage); // backend validation
+          toast.error(res.data.errors[0].defaultMessage);
         } else if (res.data?.message?.includes('already exists')) {
-          setErrorMsg('Email already exists. Try another.');
+          toast.error('Email already exists. Try another.');
         } else {
-          setErrorMsg('Invalid input. Please check the form.');
+          toast.error('Invalid input. Please check the form.');
         }
       } else {
-        setErrorMsg('Registration failed — unknown error.');
+        toast.error('Registration failed — unknown error.');
       }
+    } finally {
+      setLoading(false); // 🔵 Stop loading
     }
   };
 
@@ -171,11 +168,10 @@ const RegisterPage = () => {
             </select>
           </div>
 
-          <button type="submit" style={{ marginTop: '15px' }}>Register</button>
+          <button type="submit" style={{ marginTop: '15px' }} disabled={loading}>
+            {loading ? 'Please wait...' : 'Register'}
+          </button>
         </form>
-
-        {successMsg && <p style={{ marginTop: '15px', color: 'green' }}>{successMsg}</p>}
-        {errorMsg && <p style={{ marginTop: '15px', color: 'crimson' }}>{errorMsg}</p>}
       </div>
     </>
   );

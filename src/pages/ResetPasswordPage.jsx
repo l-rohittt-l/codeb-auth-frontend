@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { toast } from 'react-toastify';
 
 const ResetPasswordPage = () => {
   const { token } = useParams(); // read token from URL
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // 🆕 loading state
 
   const validatePassword = (password) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/;
@@ -26,26 +27,29 @@ const ResetPasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
 
     const validationError = validatePassword(newPassword);
     if (validationError) {
-      setMessage(validationError);
+      toast.error(validationError);
       return;
     }
+
+    setLoading(true); // 🟡 Start loading
 
     try {
       const response = await axios.post(`https://codeb-ims.onrender.com/api/reset-password/${token}`, {
         newPassword,
       });
-      setMessage('Password reset successful. You can now login with your new password.');
+      toast.success('Password reset successful. You can now login with your new password.');
     } catch (error) {
       console.error('Reset failed:', error.response?.data || error.message);
       if (error.response?.status === 400) {
-        setMessage('Reset token is invalid or expired.');
+        toast.error('Reset token is invalid or expired.');
       } else {
-        setMessage('Failed to reset password. Try again.');
+        toast.error('Failed to reset password. Try again.');
       }
+    } finally {
+      setLoading(false); // 🔵 Stop loading
     }
   };
 
@@ -73,14 +77,10 @@ const ResetPasswordPage = () => {
             /> Show Password
           </div>
 
-          <button type="submit" style={{ marginTop: '15px' }}>Reset Password</button>
+          <button type="submit" style={{ marginTop: '15px' }} disabled={loading}>
+            {loading ? 'Please wait...' : 'Reset Password'}
+          </button>
         </form>
-
-        {message && (
-          <p style={{ marginTop: '15px', color: message.includes('successful') ? 'green' : 'crimson' }}>
-            {message}
-          </p>
-        )}
       </div>
     </>
   );

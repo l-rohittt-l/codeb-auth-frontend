@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const LoginPage = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // 🆕 loading state
 
   const handleChange = (e) => {
     setFormData({
@@ -36,39 +37,44 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
 
     const inputError = validateInput();
     if (inputError) {
-      setMessage(inputError);
+      toast.error(inputError);
       return;
     }
 
+    setLoading(true); // 🟡 Start loading
+
     try {
       const response = await axios.post('https://codeb-ims.onrender.com/api/login', formData);
-      setMessage('Login successful');
+      toast.success('Login successful');
 
       const userRole = response.data.role;
-      console.log('Returned user role:', userRole);
-
       const normalizedRole = userRole?.toUpperCase().replace('ROLE_', '');
+
+      // ✅ Store role + login state in localStorage
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('role', normalizedRole);
 
       if (normalizedRole === 'ADMIN') {
         setTimeout(() => navigate('/admin/dashboard'), 1000);
       } else if (normalizedRole === 'SALES') {
         setTimeout(() => navigate('/sales/dashboard'), 1000);
       } else {
-        setMessage('Unknown user role. Cannot redirect.');
+        toast.error('Unknown user role. Cannot redirect.');
       }
 
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
 
       if (error.response?.status === 401) {
-        setMessage('Invalid email or password.');
+        toast.error('Invalid email or password.');
       } else {
-        setMessage('Login failed — server error or unreachable.');
+        toast.error('Login failed — server error or unreachable.');
       }
+    } finally {
+      setLoading(false); // 🔵 Stop loading
     }
   };
 
@@ -114,14 +120,10 @@ const LoginPage = () => {
             </a>
           </div>
 
-          <button type="submit" style={{ marginTop: '15px' }}>Login</button>
+          <button type="submit" style={{ marginTop: '15px' }} disabled={loading}>
+            {loading ? 'Please wait...' : 'Login'}
+          </button>
         </form>
-
-        {message && (
-          <p style={{ marginTop: '15px', color: message.includes('successful') ? 'green' : 'crimson' }}>
-            {message}
-          </p>
-        )}
       </div>
     </>
   );
