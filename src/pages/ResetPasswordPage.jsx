@@ -6,11 +6,33 @@ import Navbar from '../components/Navbar';
 const ResetPasswordPage = () => {
   const { token } = useParams(); // read token from URL
   const [newPassword, setNewPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
+
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/;
+
+    if (!password || password.trim() === '') {
+      return "Password is required.";
+    }
+    if (password.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+    if (!regex.test(password)) {
+      return "Password must contain uppercase, lowercase, number, and special character.";
+    }
+    return null;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+
+    const validationError = validatePassword(newPassword);
+    if (validationError) {
+      setMessage(validationError);
+      return;
+    }
 
     try {
       const response = await axios.post(`https://codeb-ims.onrender.com/api/reset-password/${token}`, {
@@ -36,12 +58,21 @@ const ResetPasswordPage = () => {
           <div>
             <label>New Password:</label><br />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
           </div>
+
+          <div style={{ marginTop: '5px' }}>
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            /> Show Password
+          </div>
+
           <button type="submit" style={{ marginTop: '15px' }}>Reset Password</button>
         </form>
 

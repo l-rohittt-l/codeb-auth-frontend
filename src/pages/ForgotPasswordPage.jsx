@@ -6,15 +6,31 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+
+    if (!email) {
+      setMessage('Email is required.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setMessage('Please enter a valid email address.');
+      return;
+    }
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/forgot-password`, { email });
       setMessage('Reset password link sent to your email.');
     } catch (error) {
       console.error('Error sending reset link:', error.response?.data || error.message);
+
       if (error.response?.status === 404) {
         setMessage('Email not found.');
       } else {
