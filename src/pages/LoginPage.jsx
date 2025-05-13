@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { toast } from 'react-toastify';
 
+console.log(API_BASE_URL);
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const LoginPage = () => {
