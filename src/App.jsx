@@ -8,25 +8,29 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 import SalesDashboardPage from './pages/SalesDashboardPage';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
-import ProfilePage from './pages/ProfilePage'; // ✅ added
+import ProfilePage from './pages/ProfilePage';
+import ProtectedRoute from './routes/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ProtectedRoute from './routes/ProtectedRoute'; // ✅ import route guard
+
+// ✅ Group Management Pages
+import GroupDashboard from './pages/GroupDashboard';
+import AddGroup from './pages/AddGroup';
+import EditGroup from './pages/EditGroup'; // ✅ FIXED missing import
 
 const App = () => {
   return (
     <BrowserRouter>
       <>
         <Routes>
-          <Route path="/groups/edit/:id" element={<EditGroup />} />
-
+          {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-          {/* ✅ Protected Routes */}
+          {/* Protected Routes */}
           <Route
             path="/admin/dashboard"
             element={
@@ -54,6 +58,33 @@ const App = () => {
             }
           />
 
+          {/* Group Management Routes (Admin Only) */}
+          <Route
+            path="/groups/dashboard"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <GroupDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/groups/add"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AddGroup />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/groups/edit/:id"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <EditGroup />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback and generic routes */}
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="*" element={<LoginPage />} />
         </Routes>
