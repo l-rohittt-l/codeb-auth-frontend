@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -16,7 +19,19 @@ const RegisterPage = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false); // 🆕 loading state
+  const [loading, setLoading] = useState(false);
+
+  // 🔐 Redirect if already logged in
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const role = localStorage.getItem('role');
+
+    if (isAuthenticated && role) {
+      toast.info('You are already logged in.');
+      if (role === 'ADMIN') navigate('/admin/dashboard');
+      else if (role === 'SALES') navigate('/sales/dashboard');
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -61,7 +76,7 @@ const RegisterPage = () => {
       return;
     }
 
-    setLoading(true); // 🟡 Start loading
+    setLoading(true);
 
     try {
       const { confirmPassword, ...requestData } = formData;
@@ -94,7 +109,7 @@ const RegisterPage = () => {
         toast.error('Registration failed — unknown error.');
       }
     } finally {
-      setLoading(false); // 🔵 Stop loading
+      setLoading(false);
     }
   };
 

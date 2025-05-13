@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { toast } from 'react-toastify';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,7 +15,17 @@ const LoginPage = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false); // 🆕 loading state
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    if (isAuthenticated) {
+      toast.info('You are already logged in.');
+      const role = localStorage.getItem('role');
+      if (role === 'ADMIN') navigate('/admin/dashboard');
+      else if (role === 'SALES') navigate('/sales/dashboard');
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -44,16 +56,21 @@ const LoginPage = () => {
       return;
     }
 
-    setLoading(true); // 🟡 Start loading
+    setLoading(true);
 
     try {
-      const response = await axios.post('https://codeb-ims.onrender.com/api/login', formData);
+      // ✅ Optional: kill existing backend session just in case
+      await axios.post(`${API_BASE_URL}/logout`, {}, { withCredentials: true });
+
+      const response = await axios.post(`${API_BASE_URL}/api/login`, formData, {
+        withCredentials: true
+      });
+
       toast.success('Login successful');
 
       const userRole = response.data.role;
       const normalizedRole = userRole?.toUpperCase().replace('ROLE_', '');
 
-      // ✅ Store role + login state in localStorage
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('role', normalizedRole);
 
@@ -74,7 +91,7 @@ const LoginPage = () => {
         toast.error('Login failed — server error or unreachable.');
       }
     } finally {
-      setLoading(false); // 🔵 Stop loading
+      setLoading(false);
     }
   };
 

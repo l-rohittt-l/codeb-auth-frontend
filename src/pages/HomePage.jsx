@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const role = localStorage.getItem('role');
+
+    if (isAuthenticated && role) {
+      if (role === 'ADMIN') navigate('/admin/dashboard');
+      else if (role === 'SALES') navigate('/sales/dashboard');
+    }
+  }, [navigate]);
 
   return (
     <div style={{
