@@ -14,12 +14,14 @@ const AdminDashboardPage = () => {
         <p>This is your Admin Dashboard.</p>
         <p>Here you will manage users, view reports, and monitor system activity.</p>
 
-        {/* Group Management Card */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          marginTop: '50px'
+          gap: '40px',
+          marginTop: '50px',
+          flexWrap: 'wrap'
         }}>
+          {/* Group Management Card */}
           <div style={{
             border: '1px solid #ccc',
             borderRadius: '12px',
@@ -33,6 +35,23 @@ const AdminDashboardPage = () => {
             </p>
             <a href="/groups/dashboard" className="btn btn-primary">
               Go to Groups
+            </a>
+          </div>
+
+          {/* Chain Management Card */}
+          <div style={{
+            border: '1px solid #ccc',
+            borderRadius: '12px',
+            padding: '30px',
+            width: '300px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+          }}>
+            <h4 style={{ marginBottom: '15px' }}>Chain Management</h4>
+            <p style={{ marginBottom: '20px' }}>
+              Add, edit, and delete customer chains from the system.
+            </p>
+            <a href="/chains/dashboard" className="btn btn-primary">
+              Go to Chains
             </a>
           </div>
         </div>

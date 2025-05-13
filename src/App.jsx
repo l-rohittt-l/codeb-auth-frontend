@@ -16,7 +16,12 @@ import 'react-toastify/dist/ReactToastify.css';
 // ✅ Group Management Pages
 import GroupDashboard from './pages/GroupDashboard';
 import AddGroup from './pages/AddGroup';
-import EditGroup from './pages/EditGroup'; // ✅ FIXED missing import
+import EditGroup from './pages/EditGroup';
+
+// ✅ Chain Management Pages
+import ChainDashboard from './pages/ChainDashboard';
+import AddChain from './pages/AddChain';
+import EditChain from './pages/EditChain';
 
 const App = () => {
   return (
@@ -39,7 +44,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/sales/dashboard"
             element={
@@ -48,7 +52,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/profile"
             element={
@@ -58,7 +61,7 @@ const App = () => {
             }
           />
 
-          {/* Group Management Routes (Admin Only) */}
+          {/* Group Management (Admin Only) */}
           <Route
             path="/groups/dashboard"
             element={
@@ -84,7 +87,33 @@ const App = () => {
             }
           />
 
-          {/* Fallback and generic routes */}
+          {/* Chain Management (Admin Only) */}
+          <Route
+            path="/chains/dashboard"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <ChainDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chains/add"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AddChain />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chains/edit/:id"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <EditChain />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback Routes */}
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="*" element={<LoginPage />} />
         </Routes>
