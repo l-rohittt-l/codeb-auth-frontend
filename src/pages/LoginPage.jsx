@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-console.log(API_BASE_URL);
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -60,24 +59,20 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      // ✅ Optional: kill existing backend session just in case
-      await axios.post(`${API_BASE_URL}/logout`, {}, { withCredentials: true });
+      const response = await axios.post(`${API_BASE_URL}/api/login`, formData);
 
-      const response = await axios.post(`${API_BASE_URL}/api/login`, formData, {
-        withCredentials: true
-      });
+      const { token, role } = response.data;
+
+      // ✅ Store JWT and role
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      localStorage.setItem('isAuthenticated', 'true');
 
       toast.success('Login successful');
 
-      const userRole = response.data.role;
-      const normalizedRole = userRole?.toUpperCase().replace('ROLE_', '');
-
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('role', normalizedRole);
-
-      if (normalizedRole === 'ADMIN') {
+      if (role === 'ADMIN') {
         setTimeout(() => navigate('/admin/dashboard'), 1000);
-      } else if (normalizedRole === 'SALES') {
+      } else if (role === 'SALES') {
         setTimeout(() => navigate('/sales/dashboard'), 1000);
       } else {
         toast.error('Unknown user role. Cannot redirect.');

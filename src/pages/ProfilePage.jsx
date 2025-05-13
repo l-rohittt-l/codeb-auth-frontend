@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -10,8 +12,10 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/profile`, {
-        withCredentials: true
+      const response = await axios.get(`${API_BASE_URL}/api/profile`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       });
       setUser(response.data);
       setForm({ full_name: response.data.full_name, newPassword: '' });
@@ -42,8 +46,10 @@ const ProfilePage = () => {
 
     setLoading(true);
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/profile`, form, {
-        withCredentials: true
+      await axios.put(`${API_BASE_URL}/api/profile`, form, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       });
       toast.success('Profile updated successfully');
       setEditMode(false);
