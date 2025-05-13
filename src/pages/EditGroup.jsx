@@ -12,7 +12,9 @@ const EditGroup = () => {
   useEffect(() => {
     const fetchGroup = async () => {
       try {
-        const res = await axios.get(`https://codeb-ims.onrender.com/api/groups/${id}`);
+        const res = await axios.get(`https://codeb-ims.onrender.com/api/groups/${id}`, {
+          withCredentials: true // ✅ include session cookie
+        });
         setGroupName(res.data.groupName);
       } catch {
         setError("Failed to load group.");
@@ -30,9 +32,11 @@ const EditGroup = () => {
     }
 
     try {
-      await axios.put(`https://codeb-ims.onrender.com/api/groups/${id}`, {
-        groupName: groupName.trim(),
-      });
+      await axios.put(
+        `https://codeb-ims.onrender.com/api/groups/${id}`,
+        { groupName: groupName.trim() },
+        { withCredentials: true } // ✅ include session cookie
+      );
       navigate("/groups/dashboard");
     } catch (err) {
       setError(err.response?.data || "Error updating group.");

@@ -8,7 +8,9 @@ const GroupDashboard = () => {
   // Fetch groups
   const fetchGroups = async () => {
     try {
-      const res = await axios.get("https://codeb-ims.onrender.com/api/groups");
+      const res = await axios.get("https://codeb-ims.onrender.com/api/groups", {
+        withCredentials: true // ✅ send session cookie
+      });
       setGroups(res.data);
     } catch (err) {
       setError("Failed to load groups.");
@@ -23,11 +25,12 @@ const GroupDashboard = () => {
     const confirm = window.confirm("Are you sure you want to delete this group?");
     if (!confirm) return;
 
-    // You can check chain linkage from a backend flag or hardcode for now
-    const isLinked = false;
+    const isLinked = false; // update if chain linkage check is added later
 
     try {
-      await axios.delete(`https://codeb-ims.onrender.com/api/groups/${id}?isLinked=${isLinked}`);
+      await axios.delete(`https://codeb-ims.onrender.com/api/groups/${id}?isLinked=${isLinked}`, {
+        withCredentials: true // ✅ send session cookie
+      });
       fetchGroups(); // refresh list
     } catch (err) {
       alert(err.response?.data || "Error deleting group.");
