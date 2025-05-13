@@ -18,6 +18,8 @@ const App = () => {
     <BrowserRouter>
       <>
         <Routes>
+          <Route path="/groups/edit/:id" element={<EditGroup />} />
+
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
