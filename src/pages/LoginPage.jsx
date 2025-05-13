@@ -11,6 +11,7 @@ const LoginPage = () => {
     password: ''
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
@@ -20,9 +21,28 @@ const LoginPage = () => {
     });
   };
 
+  const validateInput = () => {
+    if (!formData.email || !formData.password) {
+      return "Email and password are required.";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return "Please enter a valid email address.";
+    }
+
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+
+    const inputError = validateInput();
+    if (inputError) {
+      setMessage(inputError);
+      return;
+    }
 
     try {
       const response = await axios.post('https://codeb-ims.onrender.com/api/login', formData);
@@ -68,15 +88,24 @@ const LoginPage = () => {
               required
             />
           </div>
+
           <div style={{ marginTop: '10px' }}>
             <label>Password:</label><br />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div>
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            /> Show Password
           </div>
 
           <div style={{ marginTop: '8px' }}>
