@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {
@@ -10,15 +9,11 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/logout`, {}, { withCredentials: true });
-    } catch (error) {
-      console.error('Backend logout failed:', error.message);
-    }
-
+  const handleLogout = () => {
+    localStorage.removeItem('token');              // ✅ Remove JWT
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('role');
+
     toast.success('Logged out successfully');
     navigate('/login');
   };
