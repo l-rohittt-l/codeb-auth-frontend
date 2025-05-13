@@ -78,6 +78,13 @@ const LoginPage = () => {
               required
             />
           </div>
+
+          <div style={{ marginTop: '8px' }}>
+            <a href="/forgot-password" style={{ fontSize: '0.9rem', color: '#007bff' }}>
+              Forgot Password?
+            </a>
+          </div>
+
           <button type="submit" style={{ marginTop: '15px' }}>Login</button>
         </form>
 

@@ -11,7 +11,7 @@ const ForgotPasswordPage = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('https://codeb-ims.onrender.com/api/forgot-password', { email });
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/forgot-password`, { email });
       setMessage('Reset password link sent to your email.');
     } catch (error) {
       console.error('Error sending reset link:', error.response?.data || error.message);
