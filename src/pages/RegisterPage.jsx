@@ -9,10 +9,12 @@ const RegisterPage = () => {
     full_name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     role: 'SALES',
     status: 'active'
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -23,17 +25,55 @@ const RegisterPage = () => {
     });
   };
 
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/;
+    if (password.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+    if (!regex.test(password)) {
+      return "Password must contain uppercase, lowercase, number, and special character.";
+    }
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccessMsg('');
     setErrorMsg('');
 
+    // Basic field checks
+    if (!formData.full_name || !formData.email || !formData.password || !formData.confirmPassword) {
+      setErrorMsg("All fields are required.");
+      return;
+    }
+
+    // Email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
+
+    // Password validation
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setErrorMsg(passwordError);
+      return;
+    }
+
+    // Confirm password check
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMsg("Passwords do not match.");
+      return;
+    }
+
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/register`, formData);
+      const { confirmPassword, ...requestData } = formData;
+
+      const response = await axios.post(`${API_BASE_URL}/api/register`, requestData);
       setSuccessMsg('Registration successful');
       console.log('Register success:', response.data);
 
-      // Optional: Redirect to login page after short delay
       setTimeout(() => {
         window.location.href = '/login';
       }, 1500);
@@ -77,6 +117,7 @@ const RegisterPage = () => {
               required
             />
           </div>
+
           <div style={{ marginTop: '10px' }}>
             <label>Email:</label><br />
             <input
@@ -87,16 +128,37 @@ const RegisterPage = () => {
               required
             />
           </div>
+
           <div style={{ marginTop: '10px' }}>
             <label>Password:</label><br />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
             />
           </div>
+
+          <div style={{ marginTop: '10px' }}>
+            <label>Confirm Password:</label><br />
+            <input
+              type={showPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            /> Show Password
+          </div>
+
           <div style={{ marginTop: '10px' }}>
             <label>Role:</label><br />
             <select
@@ -108,6 +170,7 @@ const RegisterPage = () => {
               <option value="ADMIN">ADMIN</option>
             </select>
           </div>
+
           <button type="submit" style={{ marginTop: '15px' }}>Register</button>
         </form>
 
