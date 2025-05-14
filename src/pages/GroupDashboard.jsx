@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../axios"; // adjust path as per your file structure
+
 
 const GroupDashboard = () => {
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState("");
 
-  // Fetch groups
+  // Fetch all groups (active + inactive)
   const fetchGroups = async () => {
     try {
-      const res = await axios.get("https://codeb-ims.onrender.com/api/groups", {
-        withCredentials: true
-      });
+      const res = await api.get("/api/groups/all");
+
       setGroups(res.data);
     } catch (err) {
       setError("Failed to load groups.");
@@ -28,10 +29,9 @@ const GroupDashboard = () => {
     const isLinked = false;
 
     try {
-      await axios.delete(`https://codeb-ims.onrender.com/api/groups/${id}?isLinked=${isLinked}`, {
-        withCredentials: true
-      });
-      fetchGroups();
+      await api.delete(`/api/groups/${id}?isLinked=${isLinked}`);
+
+      fetchGroups(); // refresh list
     } catch (err) {
       alert(err.response?.data || "Error deleting group.");
     }
@@ -50,18 +50,42 @@ const GroupDashboard = () => {
             <th>#</th>
             <th>Group Name</th>
             <th>Group Code</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {groups.map((group, index) => (
-            <tr key={group.groupId}>
+            <tr
+              key={group.groupId}
+              style={{
+                opacity: group.active ? 1 : 0.5,
+                backgroundColor: group.active ? "#fff" : "#f9f9f9"
+              }}
+            >
               <td>{index + 1}</td>
               <td>{group.groupName}</td>
               <td>{group.groupCode}</td>
               <td>
-                <a href={`/groups/edit/${group.groupId}`} className="btn btn-warning btn-sm me-2">Edit</a>
-                <button onClick={() => handleDelete(group.groupId)} className="btn btn-danger btn-sm">
+                <span className={`badge ${group.active ? "bg-success" : "bg-secondary"}`}>
+                  {group.active ? "Active" : "Inactive"}
+                </span>
+              </td>
+              <td>
+                <a
+                  href={`/groups/edit/${group.groupId}`}
+                  className="btn btn-warning btn-sm me-2"
+                  disabled={!group.active}
+                  style={{ pointerEvents: group.active ? "auto" : "none", opacity: group.active ? 1 : 0.5 }}
+                >
+                  Edit
+                </a>
+                <button
+                  onClick={() => handleDelete(group.groupId)}
+                  className="btn btn-danger btn-sm"
+                  disabled={!group.active}
+                  style={{ pointerEvents: group.active ? "auto" : "none", opacity: group.active ? 1 : 0.5 }}
+                >
                   Delete
                 </button>
               </td>
@@ -69,7 +93,7 @@ const GroupDashboard = () => {
           ))}
           {groups.length === 0 && (
             <tr>
-              <td colSpan="4" className="text-center">No groups found.</td>
+              <td colSpan="5" className="text-center">No groups found.</td>
             </tr>
           )}
         </tbody>

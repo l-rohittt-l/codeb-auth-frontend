@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddGroup = () => {
   const [groupName, setGroupName] = useState("");
@@ -22,25 +23,37 @@ const AddGroup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // clear old error
     const validationError = validateInputs();
     if (validationError) {
       setError(validationError);
+      toast.error(validationError);
       return;
     }
 
     try {
-      await axios.post(
-        "https://codeb-ims.onrender.com/api/groups",
-        {
-          groupName: groupName.trim(),
-          groupCode: groupCode.trim(),
-        },
-        { withCredentials: true }
-      );
+      const res = await axios.post(
+  "https://codeb-ims.onrender.com/api/groups",
+  {
+    groupName: groupName.trim(),
+    groupCode: groupCode.trim(),
+  },
+  {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}` // ✅ include JWT
+    }
+  }
+);
 
+
+      toast.success(res.data || "Group added successfully");
       navigate("/groups/dashboard");
     } catch (err) {
-      setError(err.response?.data || "Error adding group.");
+      const message = err.response?.data || "Error adding group.";
+      setError(message);
+      toast.error(message);
+      console.error("Add group error:", err);
     }
   };
 
@@ -68,7 +81,9 @@ const AddGroup = () => {
             onChange={(e) => setGroupCode(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn btn-primary">Add Group</button>
+        <button type="submit" className="btn btn-primary">
+          Add Group
+        </button>
       </form>
     </div>
   );
