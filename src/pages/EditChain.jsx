@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../axios"; // ✅ JWT-enabled axios
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditChain = () => {
@@ -11,9 +11,7 @@ const EditChain = () => {
   useEffect(() => {
     const fetchChain = async () => {
       try {
-        const res = await axios.get(`https://codeb-ims.onrender.com/api/chains/${id}`, {
-          withCredentials: true,
-        });
+        const res = await api.get(`/api/chains/${id}`);
         setChainName(res.data.chainName);
       } catch {
         setError("Failed to load chain.");
@@ -31,11 +29,9 @@ const EditChain = () => {
     }
 
     try {
-      await axios.put(
-        `https://codeb-ims.onrender.com/api/chains/${id}`,
-        { chainName: chainName.trim() },
-        { withCredentials: true }
-      );
+      await api.put(`/api/chains/${id}`, {
+        chainName: chainName.trim()
+      });
       navigate("/chains/dashboard");
     } catch (err) {
       setError(err.response?.data || "Error updating chain.");

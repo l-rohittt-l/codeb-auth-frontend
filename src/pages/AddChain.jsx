@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../axios"; // ✅ use JWT-enabled axios
 import { useNavigate } from "react-router-dom";
 
 const AddChain = () => {
@@ -16,12 +16,7 @@ const AddChain = () => {
     }
 
     try {
-      await axios.post(
-        "https://codeb-ims.onrender.com/api/chains",
-        { chainName: chainName.trim() },
-        { withCredentials: true }
-      );
-
+      await api.post("/api/chains", { chainName: chainName.trim() });
       navigate("/chains/dashboard");
     } catch (err) {
       setError(err.response?.data || "Error adding chain.");
