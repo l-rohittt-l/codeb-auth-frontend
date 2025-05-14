@@ -42,17 +42,19 @@ const ChainDashboard = () => {
           <tr>
             <th>#</th>
             <th>Chain Name</th>
+            <th>Group</th> {/* ✅ New column */}
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {chains.map((chain, index) => (
-            <tr key={chain.id}>
+            <tr key={chain.chainId}>
               <td>{index + 1}</td>
               <td>{chain.chainName}</td>
+              <td>{chain.group?.groupName || "—"}</td> {/* ✅ Show group name */}
               <td>
-                <a href={`/chains/edit/${chain.id}`} className="btn btn-warning btn-sm me-2">Edit</a>
-                <button onClick={() => handleDelete(chain.id)} className="btn btn-danger btn-sm">
+                <a href={`/chains/edit/${chain.chainId}`} className="btn btn-warning btn-sm me-2">Edit</a>
+                <button onClick={() => handleDelete(chain.chainId)} className="btn btn-danger btn-sm">
                   Delete
                 </button>
               </td>
@@ -60,7 +62,7 @@ const ChainDashboard = () => {
           ))}
           {chains.length === 0 && (
             <tr>
-              <td colSpan="3" className="text-center">No chains found.</td>
+              <td colSpan="4" className="text-center">No chains found.</td>
             </tr>
           )}
         </tbody>
