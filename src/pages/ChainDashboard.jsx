@@ -30,6 +30,15 @@ const ChainDashboard = () => {
     }
   };
 
+  const handleReactivate = async (id) => {
+    try {
+      await api.put(`/api/chains/${id}/reactivate`);
+      fetchChains();
+    } catch (err) {
+      alert(err.response?.data || "Error reactivating chain.");
+    }
+  };
+
   return (
     <div className="container mt-4">
       <h2>Chain Dashboard</h2>
@@ -42,7 +51,7 @@ const ChainDashboard = () => {
           <tr>
             <th>#</th>
             <th>Chain Name</th>
-            <th>Group</th> {/* ✅ New column */}
+            <th>Group</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -51,12 +60,31 @@ const ChainDashboard = () => {
             <tr key={chain.chainId}>
               <td>{index + 1}</td>
               <td>{chain.chainName}</td>
-              <td>{chain.group?.groupName || "—"}</td> {/* ✅ Show group name */}
+              <td>{chain.group?.groupName || "—"}</td>
               <td>
-                <a href={`/chains/edit/${chain.chainId}`} className="btn btn-warning btn-sm me-2">Edit</a>
-                <button onClick={() => handleDelete(chain.chainId)} className="btn btn-danger btn-sm">
-                  Delete
-                </button>
+                {chain.isActive ? (
+                  <>
+                    <a
+                      href={`/chains/edit/${chain.chainId}`}
+                      className="btn btn-warning btn-sm me-2"
+                    >
+                      Edit
+                    </a>
+                    <button
+                      onClick={() => handleDelete(chain.chainId)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      Delete
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => handleReactivate(chain.chainId)}
+                    className="btn btn-success btn-sm"
+                  >
+                    Reactivate
+                  </button>
+                )}
               </td>
             </tr>
           ))}
