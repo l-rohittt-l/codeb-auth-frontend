@@ -5,17 +5,18 @@ import { useNavigate, useParams } from "react-router-dom";
 const EditGroup = () => {
   const { id } = useParams();
   const [groupName, setGroupName] = useState("");
+  const [groupCode, setGroupCode] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Load group data on mount
   useEffect(() => {
     const fetchGroup = async () => {
       try {
         const res = await axios.get(`https://codeb-ims.onrender.com/api/groups/${id}`, {
-          withCredentials: true // ✅ include session cookie
+          withCredentials: true,
         });
         setGroupName(res.data.groupName);
+        setGroupCode(res.data.groupCode);
       } catch {
         setError("Failed to load group.");
       }
@@ -23,19 +24,34 @@ const EditGroup = () => {
     fetchGroup();
   }, [id]);
 
+  const validateInputs = () => {
+    if (!groupName.trim()) return "Group name cannot be empty.";
+    if (!groupCode.trim()) return "Group code cannot be empty.";
+
+    const codeRegex = /^[A-Z0-9_-]+$/;
+    if (!codeRegex.test(groupCode)) {
+      return "Group code must be uppercase and may only contain letters, numbers, hyphens, and underscores.";
+    }
+
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!groupName.trim()) {
-      setError("Group name cannot be empty.");
+    const validationError = validateInputs();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
     try {
       await axios.put(
         `https://codeb-ims.onrender.com/api/groups/${id}`,
-        { groupName: groupName.trim() },
-        { withCredentials: true } // ✅ include session cookie
+        {
+          groupName: groupName.trim(),
+          groupCode: groupCode.trim(),
+        },
+        { withCredentials: true }
       );
       navigate("/groups/dashboard");
     } catch (err) {
@@ -58,6 +74,17 @@ const EditGroup = () => {
             onChange={(e) => setGroupName(e.target.value)}
           />
         </div>
+
+        <div className="mb-3">
+          <label className="form-label">Group Code</label>
+          <input
+            type="text"
+            className="form-control"
+            value={groupCode}
+            onChange={(e) => setGroupCode(e.target.value)}
+          />
+        </div>
+
         <button type="submit" className="btn btn-success">Update Group</button>
       </form>
     </div>

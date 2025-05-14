@@ -9,7 +9,7 @@ const GroupDashboard = () => {
   const fetchGroups = async () => {
     try {
       const res = await axios.get("https://codeb-ims.onrender.com/api/groups", {
-        withCredentials: true // ✅ send session cookie
+        withCredentials: true
       });
       setGroups(res.data);
     } catch (err) {
@@ -25,13 +25,13 @@ const GroupDashboard = () => {
     const confirm = window.confirm("Are you sure you want to delete this group?");
     if (!confirm) return;
 
-    const isLinked = false; // update if chain linkage check is added later
+    const isLinked = false;
 
     try {
       await axios.delete(`https://codeb-ims.onrender.com/api/groups/${id}?isLinked=${isLinked}`, {
-        withCredentials: true // ✅ send session cookie
+        withCredentials: true
       });
-      fetchGroups(); // refresh list
+      fetchGroups();
     } catch (err) {
       alert(err.response?.data || "Error deleting group.");
     }
@@ -49,17 +49,19 @@ const GroupDashboard = () => {
           <tr>
             <th>#</th>
             <th>Group Name</th>
+            <th>Group Code</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {groups.map((group, index) => (
-            <tr key={group.id}>
+            <tr key={group.groupId}>
               <td>{index + 1}</td>
               <td>{group.groupName}</td>
+              <td>{group.groupCode}</td>
               <td>
-                <a href={`/groups/edit/${group.id}`} className="btn btn-warning btn-sm me-2">Edit</a>
-                <button onClick={() => handleDelete(group.id)} className="btn btn-danger btn-sm">
+                <a href={`/groups/edit/${group.groupId}`} className="btn btn-warning btn-sm me-2">Edit</a>
+                <button onClick={() => handleDelete(group.groupId)} className="btn btn-danger btn-sm">
                   Delete
                 </button>
               </td>
@@ -67,7 +69,7 @@ const GroupDashboard = () => {
           ))}
           {groups.length === 0 && (
             <tr>
-              <td colSpan="3" className="text-center">No groups found.</td>
+              <td colSpan="4" className="text-center">No groups found.</td>
             </tr>
           )}
         </tbody>
