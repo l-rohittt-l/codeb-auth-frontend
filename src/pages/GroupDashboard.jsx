@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import api from "../axios"; // adjust path as per your file structure
-
+import api from "../axios"; // centralized axios instance
 
 const GroupDashboard = () => {
   const [groups, setGroups] = useState([]);
@@ -11,7 +9,6 @@ const GroupDashboard = () => {
   const fetchGroups = async () => {
     try {
       const res = await api.get("/api/groups/all");
-
       setGroups(res.data);
     } catch (err) {
       setError("Failed to load groups.");
@@ -30,10 +27,21 @@ const GroupDashboard = () => {
 
     try {
       await api.delete(`/api/groups/${id}?isLinked=${isLinked}`);
-
       fetchGroups(); // refresh list
     } catch (err) {
       alert(err.response?.data || "Error deleting group.");
+    }
+  };
+
+  const handleReactivate = async (id) => {
+    const confirm = window.confirm("Reactivate this group?");
+    if (!confirm) return;
+
+    try {
+      await api.put(`/api/groups/${id}/activate`);
+      fetchGroups(); // refresh list
+    } catch (err) {
+      alert(err.response?.data || "Error reactivating group.");
     }
   };
 
@@ -72,22 +80,29 @@ const GroupDashboard = () => {
                 </span>
               </td>
               <td>
-                <a
-                  href={`/groups/edit/${group.groupId}`}
-                  className="btn btn-warning btn-sm me-2"
-                  disabled={!group.active}
-                  style={{ pointerEvents: group.active ? "auto" : "none", opacity: group.active ? 1 : 0.5 }}
-                >
-                  Edit
-                </a>
-                <button
-                  onClick={() => handleDelete(group.groupId)}
-                  className="btn btn-danger btn-sm"
-                  disabled={!group.active}
-                  style={{ pointerEvents: group.active ? "auto" : "none", opacity: group.active ? 1 : 0.5 }}
-                >
-                  Delete
-                </button>
+                {group.active ? (
+                  <>
+                    <a
+                      href={`/groups/edit/${group.groupId}`}
+                      className="btn btn-warning btn-sm me-2"
+                    >
+                      Edit
+                    </a>
+                    <button
+                      onClick={() => handleDelete(group.groupId)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      Delete
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => handleReactivate(group.groupId)}
+                    className="btn btn-secondary btn-sm"
+                  >
+                    Reactivate
+                  </button>
+                )}
               </td>
             </tr>
           ))}
