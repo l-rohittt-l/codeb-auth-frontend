@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../axios"; // ✅ uses centralized JWT axios
 
 const ChainDashboard = () => {
   const [chains, setChains] = useState([]);
@@ -7,9 +7,7 @@ const ChainDashboard = () => {
 
   const fetchChains = async () => {
     try {
-      const res = await axios.get("https://codeb-ims.onrender.com/api/chains", {
-        withCredentials: true,
-      });
+      const res = await api.get("/api/chains");
       setChains(res.data);
     } catch (err) {
       setError("Failed to load chains.");
@@ -25,9 +23,7 @@ const ChainDashboard = () => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`https://codeb-ims.onrender.com/api/chains/${id}`, {
-        withCredentials: true,
-      });
+      await api.delete(`/api/chains/${id}`);
       fetchChains();
     } catch (err) {
       alert(err.response?.data || "Error deleting chain.");
