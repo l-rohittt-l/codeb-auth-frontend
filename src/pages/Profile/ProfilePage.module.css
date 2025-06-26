@@ -1,0 +1,98 @@
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(to bottom right, #e0eafc, #cfdef3);
+  padding: 40px 20px;
+}
+
+.profile-card {
+  background: white;
+  padding: 32px 28px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  max-width: 420px;
+  width: 100%;
+}
+
+.profile-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #1e1e2f;
+  font-size: 26px;
+}
+
+.profile-item {
+  margin-bottom: 16px;
+}
+
+.profile-item label {
+  font-weight: 600;
+  color: #333;
+}
+
+.profile-item p {
+  margin: 6px 0 0;
+  color: #444;
+}
+
+.profile-item input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  transition: 0.3s;
+}
+
+.profile-item input:focus {
+  border-color: #007bff;
+  background-color: white;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.button-group button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #1e7e34;
+}
+
+.cancel-btn {
+  background-color: #f1f1f1;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}

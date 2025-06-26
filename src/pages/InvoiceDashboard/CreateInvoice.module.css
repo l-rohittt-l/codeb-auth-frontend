@@ -1,0 +1,110 @@
+.invoiceContainer {
+  max-width: 800px;
+  margin: 40px auto;
+  background-color: #f3f8fc;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #1a1a1a;
+}
+
+.readOnlyBlock {
+  margin-bottom: 30px;
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.readOnlyBlock p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form label {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.form input {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+}
+
+.form input[readonly] {
+  background-color: #eaeaea;
+  cursor: not-allowed;
+}
+
+.submitBtn {
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submitBtn:hover {
+  background-color: #218838;
+}
+
+.invoiceTable {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: collapse;
+}
+
+.invoiceTable th,
+.invoiceTable td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.invoiceTable th {
+  background-color: #e0e0e0;
+  font-weight: 600;
+}
+
+.noInvoice {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+}
+
+.balanceInfo {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.paidNotice {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: green;
+  text-align: center;
+}

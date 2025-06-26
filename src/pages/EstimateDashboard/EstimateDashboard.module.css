@@ -1,0 +1,88 @@
+.container {
+  padding: 2rem;
+}
+
+.heading {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.addBtn, .clearBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.addBtn {
+  background-color: #28a745;
+  color: white;
+}
+
+.clearBtn {
+  background-color: #ffc107;
+  color: black;
+}
+
+.filterContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filterContainer input {
+  padding: 8px;
+  width: 200px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th, .table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.editBtn, .deleteBtn {
+  padding: 4px 10px;
+  margin-right: 4px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.editBtn {
+  background-color: #007bff;
+  color: white;
+}
+
+.deleteBtn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.noData {
+  text-align: center;
+  padding: 1rem;
+  color: gray;
+}
+.generateBtn {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 5px;
+}

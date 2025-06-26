@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { toast } from 'react-toastify';
+import api from '../axios'; // ✅ centralized axios instance
 
 const ResetPasswordPage = () => {
   const { token } = useParams(); // read token from URL
@@ -37,7 +37,7 @@ const ResetPasswordPage = () => {
     setLoading(true); // 🟡 Start loading
 
     try {
-      const response = await axios.post(`https://codeb-ims.onrender.com/api/reset-password/${token}`, {
+      await api.post(`/api/reset-password/${token}`, {
         newPassword,
       });
       toast.success('Password reset successful. You can now login with your new password.');

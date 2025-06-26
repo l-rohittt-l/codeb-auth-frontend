@@ -3,13 +3,21 @@ import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-  const userRole = localStorage.getItem('role'); // 'ADMIN' or 'SALES'
+  const userRole = localStorage.getItem('role'); // "ADMIN" or "SALES"
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && userRole !== requiredRole) {
+  // Normalize requiredRole to array
+  const allowedRoles = Array.isArray(requiredRole)
+    ? requiredRole
+    : requiredRole
+    ? [requiredRole]
+    : [];
+
+  // Check role access if requiredRole is specified
+  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
     return (
       <div style={{ textAlign: 'center', marginTop: '100px', color: 'crimson' }}>
         <h2>🚫 Unauthorized Access</h2>

@@ -1,0 +1,76 @@
+.home-wrapper {
+  height: 100vh;
+  background: linear-gradient(to right, #e0f0ff, #f4f9ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 40px 20px;
+}
+
+.home-card {
+  background: #ffffff;
+  padding: 50px 60px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.8s ease-in-out;
+  max-width: 480px;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.home-card:hover {
+  transform: translateY(-5px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo {
+  width: 65px;
+  margin-bottom: 20px;
+}
+
+.home-card h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #1e1e2f;
+}
+
+.home-card p {
+  font-size: 1.15rem;
+  margin-bottom: 32px;
+  color: #4a4a4a;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn-group button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 24px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.btn-group button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.25);
+}

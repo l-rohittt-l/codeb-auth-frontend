@@ -1,0 +1,47 @@
+.estimateContainer {
+  padding: 2rem;
+  max-width: 600px;
+  margin: auto;
+}
+
+.estimateHeading {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.estimateForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.estimateForm label {
+  font-weight: 500;
+}
+
+.estimateForm input,
+.estimateForm select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: white;
+  color: black;
+}
+
+/* This ensures dropdown options are readable */
+.estimateForm select option {
+  color: black !important;
+  background-color: white !important;
+}
+
+.estimateSubmitBtn {
+  padding: 10px 16px;
+  background-color: #28a745;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

@@ -1,15 +1,20 @@
-// src/utils/logout.js
-import axios from 'axios';
+import { toast } from 'react-toastify';
 
-export const logout = async () => {
+// Optional: You can import `useNavigate` in components, not in this utility
+
+export const logout = () => {
   try {
-    // Call Spring Boot logout endpoint
-    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/logout`, {}, { withCredentials: true });
-  } catch (error) {
-    console.error('Backend logout failed (possibly already expired):', error.message);
-  }
+    // Clear local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('role');
 
-  // Clear frontend state
-  localStorage.removeItem('isAuthenticated');
-  localStorage.removeItem('role');
+    // Optional toast notification
+    toast.success('Logged out successfully');
+
+    // Redirect to login
+    window.location.href = '/login';
+  } catch (error) {
+    console.error('Logout error:', error.message);
+  }
 };

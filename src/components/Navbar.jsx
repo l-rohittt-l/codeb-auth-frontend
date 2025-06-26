@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { logout } from '../utils/logout'; // ✅ central logout utility
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -8,15 +9,6 @@ const Navbar = () => {
   const userRole = localStorage.getItem('role');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');              // ✅ Remove JWT
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('role');
-
-    toast.success('Logged out successfully');
-    navigate('/login');
-  };
 
   const goToDashboard = () => {
     if (userRole === 'ADMIN') navigate('/admin/dashboard');
@@ -28,7 +20,6 @@ const Navbar = () => {
     navigate('/profile');
   };
 
-  // 🧠 Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -43,73 +34,87 @@ const Navbar = () => {
   return (
     <nav style={{
       background: '#222',
-      padding: '10px 20px',
-      color: 'white',
+      padding: '10px 0',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      position: 'relative'
+      justifyContent: 'center'
     }}>
-      <div
-        onClick={() => navigate('/')}
-        style={{ fontSize: '24px', fontWeight: 'bold', cursor: 'pointer' }}
-      >
-        CodeB
-      </div>
-
-      {isAuthenticated && (
-        <div style={{ position: 'relative' }} ref={dropdownRef}>
-          <div
-            onClick={() => setShowDropdown(prev => !prev)}
-            style={{ cursor: 'pointer', fontSize: '16px', userSelect: 'none' }}
-          >
-            Profile ▾
-          </div>
-
-          {showDropdown && (
-            <div style={{
-              position: 'absolute',
-              right: 0,
-              backgroundColor: '#333',
-              border: '1px solid #444',
-              borderRadius: '4px',
-              marginTop: '5px',
-              minWidth: '160px',
-              zIndex: 1000
-            }}>
-              <div
-                onClick={goToDashboard}
-                style={{
-                  padding: '8px 12px',
-                  cursor: 'pointer',
-                  borderBottom: '1px solid #444'
-                }}
-              >
-                Dashboard
-              </div>
-              <div
-                onClick={goToProfile}
-                style={{
-                  padding: '8px 12px',
-                  cursor: 'pointer',
-                  borderBottom: '1px solid #444'
-                }}
-              >
-                My Profile
-              </div>
-              <div
-                onClick={handleLogout}
-                style={{
-                  padding: '8px 12px',
-                  cursor: 'pointer'
-                }}
-              >
-                Logout
-              </div>
-            </div>
-          )}
+      <div style={{
+        width: '100%',
+        maxWidth: '1280px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '0 20px'
+      }}>
+        <div
+          onClick={() => navigate('/')}
+          style={{
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: 'white',
+            cursor: 'pointer'
+          }}
+        >
+          CodeB
         </div>
-      )}
+
+        {isAuthenticated && (
+          <div style={{ position: 'relative' }} ref={dropdownRef}>
+            <div
+              onClick={() => setShowDropdown(prev => !prev)}
+              style={{ cursor: 'pointer', fontSize: '16px', userSelect: 'none', color: 'white' }}
+            >
+              Profile ▾
+            </div>
+
+            {showDropdown && (
+              <div style={{
+                position: 'absolute',
+                right: 0,
+                backgroundColor: '#333',
+                border: '1px solid #444',
+                borderRadius: '4px',
+                marginTop: '5px',
+                minWidth: '160px',
+                zIndex: 1000
+              }}>
+                <div
+                  onClick={goToDashboard}
+                  style={{
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #444',
+                    color: '#fff'
+                  }}
+                >
+                  Dashboard
+                </div>
+                <div
+                  onClick={goToProfile}
+                  style={{
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #444',
+                    color: '#fff'
+                  }}
+                >
+                  My Profile
+                </div>
+                <div
+                  onClick={logout}
+                  style={{
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    color: '#fff'
+                  }}
+                >
+                  Logout
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </nav>
   );
 };

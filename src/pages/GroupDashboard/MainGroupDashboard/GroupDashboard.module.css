@@ -1,0 +1,130 @@
+.wrapper {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(to right, #eef2f7, #fefefe);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1e1e2f;
+}
+
+.addButton {
+  padding: 10px 18px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card h4 {
+  margin-bottom: 10px;
+  color: #222;
+  font-size: 18px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.badge {
+  display: inline-block;
+  margin: 8px 0;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.badge.active {
+  background-color: #d1f7d6;
+  color: #28a745;
+}
+
+.badge.inactive {
+  background-color: #eee;
+  color: #666;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.buttonGroup button,
+.buttonGroup a {
+  flex: 1;
+  padding: 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-align: center;
+}
+
+.editBtn {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.editBtn:hover {
+  background-color: #e0a800;
+}
+
+.deleteBtn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.deleteBtn:hover {
+  background-color: #b02a37;
+}
+
+.reactivateBtn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.reactivateBtn:hover {
+  background-color: #5a6268;
+}
