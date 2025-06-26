@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import api from '../../axios';
 import Navbar from '../../components/Navbar';
 import { toast } from 'react-toastify';
-import styles from './forgotPassword.module.css';
+import styles from './forgotpassword.module.css';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
